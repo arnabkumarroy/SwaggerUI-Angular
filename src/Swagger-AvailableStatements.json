@@ -1,0 +1,207 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"title": "Statements",
+		"description": "Retrieve card statements for a primary  customer. You should be logged in to access these resources",
+		"version": "1.0.0"
+	},
+	"host": "127.0.0.1",
+	"schemes": [
+		"https"
+	],
+	"basePath": "/api/v1",
+	"produces": [
+		"application/json"
+	],
+	"consumes": [
+		"application/json"
+	],
+	"paths": {
+		"/accounts/accountId/statements/{account_id}/{statementFromDate}/{statementToDate}": {
+
+			"get": {
+				"summary": "Retrieve the list of statements of a customer",
+				"description": "",
+				"tags": [
+					"Statement"
+				],
+				"parameters": [{
+					"name": "Accept-Language",
+					"in": "header",
+					"description": "List of acceptable human languages for response",
+					"type": "string",
+					"required": true
+				}, {
+					"name": "channelId",
+					"in": "header",
+					"description": "channel id used by the user",
+					"type": "string",
+					"required": true
+				}, {
+					"name": "businessCode",
+					"in": "header",
+					"description": "3 character business code, for Mexico business it is MXT",
+					"type": "string",
+					"required": true
+				}, {
+					"name": "account_id",
+					"in": "path",
+					"description": "The is the account_id of the customer",
+					"type": "string",
+					"required": true
+				}, {
+					"name": "statementFromDate",
+					"in": "path",
+					"description": "Start date of the statements requested",
+					"type": "string",
+					"required": true
+				}, {
+					"name": "statementToDate",
+					"in": "path",
+					"description": "End date of the statements requested",
+					"type": "string",
+					"required": true
+				}],
+				"responses": {
+					"200": {
+						"description": "Successful operation.",
+						"schema": {
+							"$ref": "#/definitions/CustomerStatements"
+						}
+					},
+					"400": {
+						"description": "<table><tr><td>Type</td><td>Code</td><td>Details</td></tr><tr><td>invalid</td><td>invalidRequest</td><td>Missing or invalid Parameters</td></tr></table>",
+						"schema": {
+							"$ref": "#/definitions/ErrorList"
+						}
+					},
+					"401": {
+						"description": "<table><tr><td>Type</td><td>Code</td><td>Details</td></tr><tr><td>error</td><td>unAuthorized</td><td>Authorization credentials are missing or invalid</td></tr></table>",
+						"schema": {
+							"$ref": "#/definitions/ErrorList"
+						}
+					},
+					"500": {
+						"description": "<table><tr><td>Type</td><td>Code</td><td>Details</td></tr><tr><td>fatal</td><td>serverUnavailable</td><td>The request failed due to an internal error</td></tr></table>",
+						"schema": {
+							"$ref": "#/definitions/ErrorList"
+						}
+					}
+				}
+			}
+		}
+	},
+	"definitions": {
+		"CustomerStatements": {
+			"properties": {
+				"statementList": {
+					"type": "array",
+					"description": "The list of statements for the specific customer",
+					"items": {
+						"$ref": "#/definitions/Statement"
+					}
+				}
+			},
+			"required": [
+				"statementList"
+			]
+		},
+		"Statement": {
+			"properties": {
+				"statementId": {
+					"type": "string",
+					"description": "The unique Id of the statement",
+					"example": "2986adca-c905-4827-ada2-b172bf182eb6"
+				},
+				"statementYear": {
+					"type": "string",
+					"description": "Year of the statement",
+					"example": "2016"
+				},
+				"statementMonth": {
+					"type": "string",
+					"description": "Month of the statement",
+					"example": "September"
+				},
+				"formaType": {
+					"type": "string",
+					"description": "The statement type. VAlid values are 'PDF', 'XML'",
+					"example": "PDF",
+					"enum": [
+						"PDF",
+						"XML"
+					]
+				},
+				"isCurrentStatement": {
+					"type": "boolean",
+					"description": "Statement can be a historical or current statement",
+					"example": "true or false"
+				},
+				"accountId": {
+					"type": "string",
+					"description": "The account identifier",
+					"example": "77b29431-3970-4352-ac34-55946f731ab3"
+				},
+				"statementURL": {
+					"type": "string",
+					"description": "This is the url where the statement reside",
+					"example": "url"
+				}
+			},
+			"required": [
+				"statementId",
+				"statementYear",
+				"statementMonth",
+				"accountId",
+				"formaType",
+				"isCurrentStatement",
+				"statementURL"
+			]
+		},
+		"ErrorList": {
+			"properties": {
+				"errors": {
+					"type": "array",
+					"description": "List of one or more errors",
+					"items": {
+						"$ref": "#/definitions/ErrorResponse"
+					}
+				}
+			}
+		},
+		"ErrorResponse": {
+			"properties": {
+				"type": {
+					"type": "string",
+					"enum": [
+						"error",
+						"warn",
+						"invalid",
+						"fatal"
+					],
+					"description": "<br>invalid - Request did not confirm to the specification and was unprocessed & rejected. Please fix the value and try again</br>                         <br>warn - Request was partially processed.  E.g. some of the fields are missing in response to the system issues,  request was accepted successfully but will be processed asynchronously</br>                                                           <br>error - The request was accepted but could not be processed successfully</br>            <br>fatal - There was an internal system error while processing the request. These are technical errors and will be resolved by Citi, and the consumer should retry after some time. Business errors will not be categorized as fatal </br>"
+				},
+				"code": {
+					"type": "string",
+					"description": "Error code which qualifies the error"
+				},
+				"details": {
+					"type": "string",
+					"description": "Human readable explanation specific to the occurrence of the problem"
+				},
+				"location": {
+					"type": "string",
+					"description": "The name of the field that resulted in the error"
+				},
+				"moreInfo": {
+					"type": "string",
+					"description": "URI to human readable documentation of the error"
+				}
+			},
+			"required": [
+				"type",
+				"code"
+			]
+		}
+	}
+}

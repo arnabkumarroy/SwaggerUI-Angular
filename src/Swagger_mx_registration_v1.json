@@ -1,0 +1,1134 @@
+	{
+		"swagger": "2.0",
+		"schemes": ["http"],
+		"info": {
+			"description": "The API's defined here are used to register a customer onto the Credit Card Portal (CCP). Both, BAU-Registered Bancanet users as well as first time CCP users could be registered using these API's. Also, various supporting scenarios like Mobile DB update for Customer Phone / E-mail, ATM / IVR pin validation could be accomplished with these API's.",
+			"title": "CCP Registration",
+			"version": "1.0.0"
+		},
+		"basePath": "/api/v1",
+		"definitions": {
+			"AuthRequest": {
+				"properties": {
+					"clientRelationshipNumber": {
+						"description": "Pre-registered Customer Relationship Identification number",
+						"example": "0000000000017048588",
+						"type": "string"
+					},
+					"encryptedPassword": {
+						"description": "Password for the Client ID (encrypted)",
+						"example": "xevdfgl3!gkl0rosfsdf6gwp405kc836",
+						"type": "string"
+					}
+				},
+				"required": [
+					"clientRelationshipNumber",
+					"encryptedPassword"
+				],
+				"type": "object"
+			},
+			"CCSIDRequest": {
+				"properties": {
+					"customerCCSID": {
+						"description": "CCS ID Selected by the customer",
+						"example": "sampleID",
+						"type": "string"
+					}
+				},
+				"required": [
+					"customerCCSID"
+				],
+				"type": "object"
+			},
+			"CCSIDCreateRequest": {
+				"properties": {
+					"customerCCSID": {
+						"description": "CCS ID Selected by the customer",
+						"example": "sampleID",
+						"type": "string"
+					},
+					"encryptedPassword": {
+						"description": "Password for the CCS ID (encrypted)",
+						"example": "xevdfgl3!gkl0rosfsdf6gwp405kc836",
+						"type": "string"
+					}
+				},
+				"required": [
+					"customerCCSID",
+					"encryptedPassword"
+				],
+				"type": "object"
+			},
+			"CardInformationRequest": {
+				"properties": {
+					"name": {
+						"$ref": "#/definitions/CustomerName"
+					},
+					"cardNumber": {
+						"description": "Credit card number as printed on the credit card",
+						"example": "0004037070000107591",
+						"type": "string"
+					},
+					"encryptedCVV": {
+						"description": "Credit card CVV security code as printed on the credit card",
+						"example": "xevdfgl3!gkl0rosfsdf6gwp405kc836",
+						"type": "string"
+					},
+					"cardExpiryDate": {
+						"description": "Credit card expiration date as printed on the credit card",
+						"example": "1220",
+						"type": "string"
+					},
+					"dateOfBirth": {
+						"description": "Customer personal Information - Date of Birth",
+						"example": "04021975",
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"cardNumber",
+					"encryptedCVV",
+					"cardExpiryDate",
+					"dateOfBirth"
+				],
+				"type": "object"
+			},
+			"CardInformationResponse": {
+				"properties": {
+					"validCard": {
+						"description": "Response flag displaying status of the card validation process.[true/false]",
+						"example": "true",
+						"type": "string"
+					},
+					"ccsCardRegistry": {
+						"description": "Flag to determine if a customer is registered in the credit card portal.[true/false]",
+						"example": "false",
+						"type": "string"
+					}
+				},
+				"required": [
+					"validCard"
+				],
+				"type": "object"
+			},
+			"PinRequest": {
+				"properties": {
+					"customerRelationshipID": {
+						"description": "Pre-registered Customer Relationship Identification number",
+						"example": "0000000000017048588",
+						"type": "string"
+					},
+					"encryptedPin": {
+						"description": "ATM / IVR Pin / Supplementary access code of the card",
+						"example": "xevdfgl3!gkl0rosfsdf6gwp405kc836",
+						"type": "string"
+					},
+					"pinType": {
+						"description": "Unique identifier of the pin to be validated",
+						"example": "ATM",
+						"type": "string",
+						"enum": ["IVR", "ACCESS"]
+					}
+				},
+				"required": [
+					"customerRelationshipID",
+					"encryptedPin",
+					"pinType"
+				],
+				"type": "object"
+			},
+			"PersonalInfoUpdateRequest": {
+				"properties": {
+					"customerRelationshipID": {
+						"description": "Pre-registered Customer Relationship Identification number",
+						"example": "0000000000017048588",
+						"type": "string"
+					},
+					"name": {
+						"$ref": "#/definitions/CustomerName"
+					},
+					"address": {
+						"$ref": "#/definitions/CustomerAddress"
+					},
+					"mobileNumber": {
+						"$ref": "#/definitions/CustomerPhone"
+					},
+					"emailAddress": {
+						"$ref": "#/definitions/CustomerEmail"
+					}
+				},
+				"required": [
+					"customerRelationshipID"
+				],
+				"type": "object"
+			},
+			"CustomerName": {
+				"properties": {
+					"givenName": {
+						"description": "Given name of the customer",
+						"example": "Javier",
+						"type": "string"
+					},
+					"middleName": {
+						"description": "Middle name of the customer",
+						"example": "Perez",
+						"type": "string"
+					},
+
+					"surname": {
+						"description": "Surname of the customer",
+						"example": "de Cuellar",
+						"type": "string"
+					},
+
+					"fullName": {
+						"description": "Full name of the customer",
+						"example": "Javier Perez de Cuellar",
+						"type": "string"
+					},
+					"prefix": {
+						"description": "Prefix to the customer name",
+						"example": "Mr",
+						"type": "string"
+					},
+
+					"suffix": {
+						"description": "Suffix to the customer name",
+						"example": "III",
+						"type": "string"
+					},
+					"gender": {
+						"description": "Gender of the customer",
+						"example": "MALE",
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"CustomerPhone": {
+				"properties": {
+					"phoneNumber": {
+						"description": "Mobile Number of the customer",
+						"example": "9049540007",
+						"type": "string"
+					},
+					"mobileCarrier": {
+						"description": "Mobile phone carrier / service provider",
+						"example": "ATT",
+						"type": "string"
+					},
+					"certificationLevel": {
+						"description": "Mobile Phone certification Level",
+						"example": "L2",
+						"type": "string",
+						"enum": ["L1", "L2", "L3"]
+					},
+					"source": {
+						"description": "Portal source of mobile number update",
+						"example": "CCP",
+						"type": "string"
+					},
+					"phoneID": {
+						"description": "Unique identifier of telephone",
+						"example": "123",
+						"type": "string"
+					},
+					"phoneType": {
+						"description": "Type of phone e.g.Home/Office/mobile.",
+						"example": "Mobile",
+						"type": "string",
+						"enum": ["HOME", "MOBILE", "OFFICE", "UNKNOWN"]
+					},
+					"fullTelephoneNumber": {
+						"description": "unstrutured/complete Telephone number. Telephone Number is a Citi wide standard to be used across transactional and analytical systems to accurately identify Customers/Parties and Citi personnel.The Telephone Number consists of following components: Country Telephone Code Telephone (Area/City) Code Local Telephone Number ExtensionAll components are numeric values.",
+						"example": "19049540007",
+						"type": "string"
+					},
+					"exchangeNumber": {
+						"description": "Exchange for telephone number",
+						"example": "952",
+						"type": "string"
+					},
+					"phoneCountryCode": {
+						"description": "Country code of telephone number",
+						"example": "1",
+						"type": "string"
+					},
+					"areaCode": {
+						"description": "Area code of telephone number",
+						"example": "904",
+						"type": "string"
+					},
+					"extensionNumber": {
+						"description": "Extension of telephone number",
+						"example": "9562",
+						"type": "string"
+					},
+					"phoneDeviceType": {
+						"description": "Landline/Mobile/Softphone.VoIP",
+						"example": "Mobile",
+						"type": "string",
+						"enum": ["LANDLINE", "MOBILE", "SOFTPHONE.VOIP", "UNKNOWN"]
+					}
+				},
+				"required": [
+					"phoneNumber",
+					"mobileCarrier",
+					"certificationLevel",
+					"source",
+					"phoneType",
+					"phoneDeviceType"
+				],
+				"type": "object"
+			},
+			"CustomerAddress": {
+				"properties": {
+					"addressType": {
+						"description": "Type of address. residetial or commercial",
+						"example": "Residential",
+						"type": "string",
+						"enum": ["RES", "COM"]
+					},
+					"residenceType": {
+						"description": "Type of residence, if it is condo or a apartment",
+						"example": "Apartment",
+						"type": "string",
+						"enum": ["CON", "APT"]
+					},
+					"addressStatus": {
+						"description": "Status of address. If is current, prior",
+						"example": "Apartment",
+						"type": "string",
+						"enum": ["CUR", "PRI"]
+					},
+					"addressLine1": {
+						"description": "Address Line 1",
+						"example": "Address Line 1",
+						"type": "string"
+					},
+					"addressLine2": {
+						"description": "Address Line 2",
+						"example": "Address Line 2",
+						"type": "string"
+					},
+					"addressLine3": {
+						"description": "Address Line 3",
+						"example": "Address Line 3",
+						"type": "string"
+					},
+					"addressLine4": {
+						"description": "Address Line 4",
+						"example": "Address Line 4",
+						"type": "string"
+					},
+					"addressLine5": {
+						"description": "Address Line 5",
+						"example": "Address Line 5",
+						"type": "string"
+					},
+					"postalCode": {
+						"description": "Postal code of address",
+						"example": "75063",
+						"type": "string"
+					},
+					"city": {
+						"description": "City of address",
+						"example": "Irving",
+						"type": "string"
+					},
+					"stateCode": {
+						"description": "State Code of the address",
+						"example": "TX",
+						"type": "string"
+					},
+					"countryCode": {
+						"description": "Country code is a unique code representing a country or a dependent area in the world.Citi standard adheres closely to ISO 3166-1, the International Standard 2-alpha code for country codes.This standard covers the rules around the use of a single country code standard across Citi, as well as the appropriate naming convention for country code fields",
+						"example": "US",
+						"type": "string"
+					},
+					"province": {
+						"description": "Province information of the address",
+						"example": "TX",
+						"type": "string"
+					},
+					"startDate": {
+						"description": "Start date of the address",
+						"example": "04032016",
+						"type": "string"
+					},
+					"endDate": {
+						"description": "End date of the address",
+						"example": "04032017",
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"CustomerEmail": {
+				"properties": {
+					"emailAddress": {
+						"description": "Electronic mail ID of the customer",
+						"example": "sample@abc.com",
+						"type": "string"
+					},
+					"emailType": {
+						"description": "Category of the email.valid Values:'P' - Personal'O' - Office'UNKNW' - Unknown",
+						"example": "0000000000017048588",
+						"type": "string",
+						"enum": ["P", "O", "UNKNW"]
+					}
+				},
+				"required": [
+					"emailAddress",
+					"emailType"
+				],
+				"type": "object"
+			},
+			"ErrorResponse": {
+				"properties": {
+					"code": {
+						"description": "Error code which qualifies the error",
+						"type": "string"
+					},
+					"details": {
+						"description": "Human readable explanation specific to the occurrence of the problem",
+						"type": "string"
+					},
+					"location": {
+						"description": "The name of the field that resulted in the error",
+						"type": "string"
+					},
+					"moreInfo": {
+						"description": "URI to human readable documentation of the error",
+						"type": "string"
+					},
+					"type": {
+						"description": "<br>invalid - Request did not confirm to the specification and was unprocessed & rejected. Please fix the value and try again</br>                         <br>warn - Request was partially processed.  E.g. some of the fields are missing in response to the system issues,  request was accepted successfully but will be processed asynchronously</br>                                                           <br>error - The request was accepted but could not be processed successfully</br>            <br>fatal - There was an internal system error while processing the request. These are technical errors and will be resolved by Citi, and the consumer should retry after some time. Business errors will not be categorized as fatal </br>",
+						"enum": [
+							"error",
+							"warn",
+							"invalid",
+							"fatal"
+						],
+						"type": "string"
+					}
+				},
+				"required": [
+					"type",
+					"code"
+				]
+			}
+		},
+		"paths": {
+			"/customers/custID/personalInfo": {
+				"patch": {
+					"description": "This API would update the personal information of the customer into the system.",
+					"summary": "User Registration - Personal information creation into the system",
+					"consumes": [
+						"application/json"
+					],
+					"produces": [
+						"application/json"
+					],
+					"parameters": [{
+						"default": "a7d1e304-83a9-4413-af97-62615e57eae66807840",
+						"description": "A 128 bit universally unique identifier (UUID) that you generate for every request and is used for tracking. It is recommended to use the output from Java UUID class or an equivalent.",
+						"in": "header",
+						"name": "uuid",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "application/json",
+						"description": "Content-Types that are acceptable for the response. Currently we support application/json",
+						"in": "header",
+						"name": "Accept",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "application/json",
+						"description": "Content-Type in http header. Currently we support application/json",
+						"in": "header",
+						"name": "Content-Type",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "en-US",
+						"description": "HTTP Accept-Language header",
+						"in": "header",
+						"name": "Accept-Language",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "AU",
+						"description": "2 character ISO country code",
+						"in": "header",
+						"name": "countryCode",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "GCB",
+						"description": "3 character business code",
+						"in": "header",
+						"name": "businessCode",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "CML",
+						"description": "channel ID used by the user",
+						"in": "header",
+						"name": "channelId",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "abbb4837-8343-418c-93d8-77a8519dff9e",
+						"description": "sid",
+						"in": "header",
+						"name": "sid",
+						"type": "string"
+					}, {
+						"default": "iX4xW5lG0gD6cX3uI5qN3pF6yK5nY2kB0eY5tB3xQ4rD4fD2xO",
+						"description": "The client ID  you received during application registration in the developer portal",
+						"in": "header",
+						"name": "client_id",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "iX4xW5lG0gD6cX3uI5qN3pF6yK5nY2kB0eY5tB3xQ4rD4fD2xO",
+						"description": "Client Secret generated during application registration",
+						"in": "header",
+						"name": "client_secret",
+						"required": true,
+						"type": "string"
+					}, {
+						"description": "Personal Information update request for updating the full user name into the system",
+						"in": "body",
+						"name": "PersonalInfoUpdateRequest",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/PersonalInfoUpdateRequest"
+						}
+					}],
+					"responses": {
+						"200": {
+							"description": "Personal Information Update is successful"
+						},
+						"400": {
+							"description": "(BAD REQUEST) - Request was not processed",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						},
+						"403": {
+							"description": "(FORBIDDEN) - Unauthorized to perform the requested operation on resource.",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						},
+						"500": {
+							"description": "(INTERNAL SERVER ERROR) - API Server Error.",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						}
+					}
+				}
+			},
+			"/customers/custID": {
+				"post": {
+					"description": "This API would authenticate the given clientID - password in the system",
+					"summary": "User Registration - ClientID Validation",
+					"consumes": [
+						"application/json"
+					],
+					"produces": [
+						"application/json"
+					],
+					"parameters": [{
+						"default": "a7d1e304-83a9-4413-af97-62615e57eae66807840",
+						"description": "A 128 bit universally unique identifier (UUID) that you generate for every request and is used for tracking. It is recommended to use the output from Java UUID class or an equivalent.",
+						"in": "header",
+						"name": "uuid",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "application/json",
+						"description": "Content-Types that are acceptable for the response. Currently we support application/json",
+						"in": "header",
+						"name": "Accept",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "application/json",
+						"description": "Content-Type in http header. Currently we support application/json",
+						"in": "header",
+						"name": "Content-Type",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "en-US",
+						"description": "HTTP Accept-Language header",
+						"in": "header",
+						"name": "Accept-Language",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "AU",
+						"description": "2 character ISO country code",
+						"in": "header",
+						"name": "countryCode",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "GCB",
+						"description": "3 character business code",
+						"in": "header",
+						"name": "businessCode",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "CML",
+						"description": "channel ID used by the user",
+						"in": "header",
+						"name": "channelId",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "abbb4837-8343-418c-93d8-77a8519dff9e",
+						"description": "sid",
+						"in": "header",
+						"name": "sid",
+						"type": "string"
+					}, {
+						"default": "iX4xW5lG0gD6cX3uI5qN3pF6yK5nY2kB0eY5tB3xQ4rD4fD2xO",
+						"description": "The client ID  you received during application registration in the developer portal",
+						"in": "header",
+						"name": "client_id",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "iX4xW5lG0gD6cX3uI5qN3pF6yK5nY2kB0eY5tB3xQ4rD4fD2xO",
+						"description": "Client Secret generated during application registration",
+						"in": "header",
+						"name": "client_secret",
+						"required": true,
+						"type": "string"
+					}, {
+						"description": "Customer Relationship ID / password validation request (or) CCS customer relationship ID verification request",
+						"in": "body",
+						"name": "AuthRequest",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/AuthRequest"
+						}
+					}],
+					"responses": {
+						"200": {
+							"description": "Successful response. The entered customer relationship ID / password is valid."
+						},
+						"401": {
+							"description": "(UNAUTHORIZED): The authentication credentials are missing, or if supplied are not valid or not sufficient to access the resource.",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						},
+						"400": {
+							"description": "(BAD REQUEST) - Request was not processed",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						},
+						"403": {
+							"description": "(FORBIDDEN) - Unauthorized to perform the requested operation on resource.",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						},
+						"500": {
+							"description": "(INTERNAL SERVER ERROR) - API Server Error.",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						}
+					}
+				}
+			},
+			"/customers/custID/pin": {
+				"post": {
+					"description": "This API would validate the pin entered by the customer",
+					"summary": "User Registration - Pin Validation",
+					"consumes": [
+						"application/json"
+					],
+					"produces": [
+						"application/json"
+					],
+					"parameters": [{
+						"default": "a7d1e304-83a9-4413-af97-62615e57eae66807840",
+						"description": "A 128 bit universally unique identifier (UUID) that you generate for every request and is used for tracking. It is recommended to use the output from Java UUID class or an equivalent.",
+						"in": "header",
+						"name": "uuid",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "application/json",
+						"description": "Content-Types that are acceptable for the response. Currently we support application/json",
+						"in": "header",
+						"name": "Accept",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "application/json",
+						"description": "Content-Type in http header. Currently we support application/json",
+						"in": "header",
+						"name": "Content-Type",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "en-US",
+						"description": "HTTP Accept-Language header",
+						"in": "header",
+						"name": "Accept-Language",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "AU",
+						"description": "2 character ISO country code",
+						"in": "header",
+						"name": "countryCode",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "GCB",
+						"description": "3 character business code",
+						"in": "header",
+						"name": "businessCode",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "CML",
+						"description": "channel ID used by the user",
+						"in": "header",
+						"name": "channelId",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "abbb4837-8343-418c-93d8-77a8519dff9e",
+						"description": "sid",
+						"in": "header",
+						"name": "sid",
+						"type": "string"
+					}, {
+						"default": "iX4xW5lG0gD6cX3uI5qN3pF6yK5nY2kB0eY5tB3xQ4rD4fD2xO",
+						"description": "The client ID  you received during application registration in the developer portal",
+						"in": "header",
+						"name": "client_id",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "iX4xW5lG0gD6cX3uI5qN3pF6yK5nY2kB0eY5tB3xQ4rD4fD2xO",
+						"description": "Client Secret generated during application registration",
+						"in": "header",
+						"name": "client_secret",
+						"required": true,
+						"type": "string"
+					}, {
+						"description": "Request for validation of the pin",
+						"in": "body",
+						"name": "PinRequest",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/PinRequest"
+						}
+					}],
+					"responses": {
+						"200": {
+							"description": "Successful response. The entered pin is valid"
+						},
+						"401": {
+							"description": "(UNAUTHORIZED): The authentication credentials are missing, or if supplied are not valid or not sufficient to access the resource.",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						},
+						"400": {
+							"description": "(BAD REQUEST) - Request was not processed",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						},
+						"403": {
+							"description": "(FORBIDDEN) - Unauthorized to perform the requested operation on resource.",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						},
+						"500": {
+							"description": "(INTERNAL SERVER ERROR) - API Server Error.",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						}
+					}
+				}
+			},
+			"/customers/custID/card": {
+				"post": {
+					"description": "This API would validate the card details entered by the customer.",
+					"summary": "User Registration - Card Validation",
+					"consumes": [
+						"application/json"
+					],
+					"produces": [
+						"application/json"
+					],
+					"parameters": [{
+						"default": "a7d1e304-83a9-4413-af97-62615e57eae66807840",
+						"description": "A 128 bit universally unique identifier (UUID) that you generate for every request and is used for tracking. It is recommended to use the output from Java UUID class or an equivalent.",
+						"in": "header",
+						"name": "uuid",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "application/json",
+						"description": "Content-Types that are acceptable for the response. Currently we support application/json",
+						"in": "header",
+						"name": "Accept",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "application/json",
+						"description": "Content-Typee in http header. Currently we support application/json",
+						"in": "header",
+						"name": "Content-Type",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "en-US",
+						"description": "HTTP Accept-Language header",
+						"in": "header",
+						"name": "Accept-Language",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "AU",
+						"description": "2 character ISO country code",
+						"in": "header",
+						"name": "countryCode",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "GCB",
+						"description": "3 character business code",
+						"in": "header",
+						"name": "businessCode",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "CML",
+						"description": "channel ID used by the user",
+						"in": "header",
+						"name": "channelId",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "abbb4837-8343-418c-93d8-77a8519dff9e",
+						"description": "sid",
+						"in": "header",
+						"name": "sid",
+						"type": "string"
+					}, {
+						"default": "iX4xW5lG0gD6cX3uI5qN3pF6yK5nY2kB0eY5tB3xQ4rD4fD2xO",
+						"description": "The client ID  you received during application registration in the developer portal",
+						"in": "header",
+						"name": "client_id",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "iX4xW5lG0gD6cX3uI5qN3pF6yK5nY2kB0eY5tB3xQ4rD4fD2xO",
+						"description": "Client Secret generated during application registration",
+						"in": "header",
+						"name": "client_secret",
+						"required": true,
+						"type": "string"
+					}, {
+						"description": "Card information request for validation of the plastic / personal details",
+						"in": "body",
+						"name": "CardInformationRequest",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/CardInformationRequest"
+						}
+					}],
+					"responses": {
+						"200": {
+							"description": "Successful response",
+							"schema": {
+								"$ref": "#/definitions/CardInformationResponse"
+							}
+						},
+						"400": {
+							"description": "(BAD REQUEST) - Request was not processed",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						},
+						"403": {
+							"description": "(FORBIDDEN) - Unauthorized to perform the requested operation on resource.",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						},
+						"500": {
+							"description": "(INTERNAL SERVER ERROR) - API Server Error.",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						}
+					}
+				}
+			},
+			"/customers/profile": {
+				"post": {
+					"description": "This API would create a new CCS ID in the system",
+					"summary": "User Registration - CCS ID Creation",
+					"consumes": [
+						"application/json"
+					],
+					"produces": [
+						"application/json"
+					],
+					"parameters": [{
+						"default": "a7d1e304-83a9-4413-af97-62615e57eae66807840",
+						"description": "A 128 bit universally unique identifier (UUID) that you generate for every request and is used for tracking. It is recommended to use the output from Java UUID class or an equivalent.",
+						"in": "header",
+						"name": "uuid",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "application/json",
+						"description": "Content-Types that are acceptable for the response. Currently we support application/json",
+						"in": "header",
+						"name": "Accept",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "application/json",
+						"description": "Content-Type in http header. Currently we support application/json",
+						"in": "header",
+						"name": "Content-Type",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "en-US",
+						"description": "HTTP Accept-Language header",
+						"in": "header",
+						"name": "Accept-Language",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "AU",
+						"description": "2 character ISO country code",
+						"in": "header",
+						"name": "countryCode",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "GCB",
+						"description": "3 character business code",
+						"in": "header",
+						"name": "businessCode",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "CML",
+						"description": "channel ID used by the user",
+						"in": "header",
+						"name": "channelId",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "abbb4837-8343-418c-93d8-77a8519dff9e",
+						"description": "sid",
+						"in": "header",
+						"name": "sid",
+						"type": "string"
+					}, {
+						"default": "iX4xW5lG0gD6cX3uI5qN3pF6yK5nY2kB0eY5tB3xQ4rD4fD2xO",
+						"description": "The client ID  you received during application registration in the developer portal",
+						"in": "header",
+						"name": "client_id",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "iX4xW5lG0gD6cX3uI5qN3pF6yK5nY2kB0eY5tB3xQ4rD4fD2xO",
+						"description": "Client Secret generated during application registration",
+						"in": "header",
+						"name": "client_secret",
+						"required": true,
+						"type": "string"
+					}, {
+						"description": "Request for validation of the pin",
+						"in": "body",
+						"name": "CCSIDCreateRequest",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/CCSIDCreateRequest"
+						}
+					}],
+					"responses": {
+						"200": {
+							"description": "Successful response. The CCS ID has been created successfully"
+						},
+						"401": {
+							"description": "(UNAUTHORIZED): The authentication credentials are missing, or if supplied are not valid or not sufficient to access the resource.",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						},
+						"400": {
+							"description": "(BAD REQUEST) - Request was not processed",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						},
+						"403": {
+							"description": "(FORBIDDEN) - Unauthorized to perform the requested operation on resource.",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						},
+						"500": {
+							"description": "(INTERNAL SERVER ERROR) - API Server Error.",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						}
+					}
+				}
+			},
+			"/customers/profile/userID": {
+				"post": {
+					"description": "This API would create a new CCS ID in the system",
+					"summary": "User Registration - CCS ID Creation",
+					"consumes": [
+						"application/json"
+					],
+					"produces": [
+						"application/json"
+					],
+					"parameters": [{
+						"default": "a7d1e304-83a9-4413-af97-62615e57eae66807840",
+						"description": "A 128 bit universally unique identifier (UUID) that you generate for every request and is used for tracking. It is recommended to use the output from Java UUID class or an equivalent.",
+						"in": "header",
+						"name": "uuid",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "application/json",
+						"description": "Content-Types that are acceptable for the response. Currently we support application/json",
+						"in": "header",
+						"name": "Accept",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "application/json",
+						"description": "Content-Type in http header. Currently we support application/json",
+						"in": "header",
+						"name": "Content-Type",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "en-US",
+						"description": "HTTP Accept-Language header",
+						"in": "header",
+						"name": "Accept-Language",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "AU",
+						"description": "2 character ISO country code",
+						"in": "header",
+						"name": "countryCode",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "GCB",
+						"description": "3 character business code",
+						"in": "header",
+						"name": "businessCode",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "CML",
+						"description": "channel ID used by the user",
+						"in": "header",
+						"name": "channelId",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "abbb4837-8343-418c-93d8-77a8519dff9e",
+						"description": "sid",
+						"in": "header",
+						"name": "sid",
+						"type": "string"
+					}, {
+						"default": "iX4xW5lG0gD6cX3uI5qN3pF6yK5nY2kB0eY5tB3xQ4rD4fD2xO",
+						"description": "The client ID  you received during application registration in the developer portal",
+						"in": "header",
+						"name": "client_id",
+						"required": true,
+						"type": "string"
+					}, {
+						"default": "iX4xW5lG0gD6cX3uI5qN3pF6yK5nY2kB0eY5tB3xQ4rD4fD2xO",
+						"description": "Client Secret generated during application registration",
+						"in": "header",
+						"name": "client_secret",
+						"required": true,
+						"type": "string"
+					}, {
+						"description": "Request for verification whether a given CCS ID exists or not",
+						"in": "body",
+						"name": "CCSIDRequest",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/CCSIDRequest"
+						}
+					}],
+					"responses": {
+						"200": {
+							"description": "Successful response. The CCS ID is available to register."
+						},
+						"401": {
+							"description": "(UNAUTHORIZED): The authentication credentials are missing, or if supplied are not valid or not sufficient to access the resource.",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						},
+						"400": {
+							"description": "(BAD REQUEST) - Request was not processed",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						},
+						"403": {
+							"description": "(FORBIDDEN) - Unauthorized to perform the requested operation on resource.",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						},
+						"500": {
+							"description": "(INTERNAL SERVER ERROR) - API Server Error.",
+							"schema": {
+								"$ref": "#/definitions/ErrorResponse"
+							}
+						}
+					}
+				}
+			}
+		},
+		"tags": [{
+			"description": "API's for User Registration",
+			"name": "UserRegistration"
+		}]
+	}

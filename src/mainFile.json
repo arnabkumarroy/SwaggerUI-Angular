@@ -1,0 +1,43 @@
+{
+  "categories": [
+  {
+    "category": "Customer",
+    "entities": [{
+      "name": "V1. login",
+      "id": "Swagger_mx_customer_profile_v1",
+      "type": "json"
+    },
+
+    {
+      "name": "V1. Registration",
+      "id": "Swagger_mx_registration_v1",
+      "type": "json"
+    }
+]
+
+  }, {
+    "category": "Card Activation",
+    "entities": [{
+      "name": "V1. cardActivation",
+      "id": "Swagger_mx_postlogin_card_activation_v1",
+      "type": "yaml"
+    }]
+  }, {
+    "category": "Rewards",
+    "entities": [{
+      "name": "V1.Rewards",
+      "id": "Swagger_mx_RewardsSummary_v1",
+      "type": "yaml"
+    }]
+  },
+
+  {
+    "category": "Statement",
+    "entities": [{
+      "name": "V1. AvailableStatements",
+      "id": "Swagger-AvailableStatements",
+      "type": "json"
+    }]
+  }
+  ]
+}

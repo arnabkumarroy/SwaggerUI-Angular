@@ -1,0 +1,141 @@
+swagger: '2.0'
+
+info:
+  description: This API is designed for retrieving reward information of a Banamex customer.
+  title: Rewards API
+  version: 1.0.0
+
+basePath: /apiv1.0
+
+produces:
+  - application/json
+schemes:
+  - https
+
+definitions:
+  Error:
+    properties:
+      code:
+        description: Error code which qualifies the error
+        type: string
+      details:
+        description: Human readable explanation specific to the occurrence of the problem
+        type: string
+      location:
+        description: The name of the field that resulted in the error
+        type: string
+      moreInfo:
+        description: URI to human readable documentation of the error
+        type: string
+      type:
+        description: >-
+          <br>invalid - Request did not confirm to the specification and was
+          unprocessed & rejected. Please fix the value and try
+          again</br>                         <br>warn - Request was partially
+          processed.  E.g. some of the fields are missing in response to the
+          system issues,  request was accepted successfully but will be
+          processed
+          asynchronously</br>                                                          
+          <br>error - The request was accepted but could not be processed
+          successfully</br>            <br>fatal - There was an internal system
+          error while processing the request. These are technical errors and
+          will be resolved by Citi, and the consumer should retry after some
+          time. Business errors will not be categorized as fatal </br>
+        enum:
+          - ERROR
+          - WARN
+          - INVALID
+          - FATAL
+        type: string
+    required:
+      - type
+      - code
+  RewardAccount:
+    type: object
+    properties:
+      balancePoints:
+        description: Customer's available reward points.
+        example: 10000
+        type: integer
+      pointsEarnedThisMonth:
+        description: Reward points earned by the customer in the current month.
+        example: 10000
+        type: integer
+      minimumPointsToRedeem:
+        description: Minimum points a customer can redeeem
+        example: 10000
+        type: integer
+      maximumPointsToRedeem:
+        description: Maximum points a customer can redeeem
+        example: 10000
+        type: integer
+      cashBalance:
+        description: Customer's available reward cash balance.
+        example: 80.32
+        type: number
+      cashEarnedThisMonth:
+        description: Customer's reward cash earned this month.
+        example: 80.32
+        type: number
+      
+        
+paths:
+  /rewardsInquiry/{rewardsSummary}/{rewardProgram}/{identifier}:
+    get:
+      description: Retrieves reward account balance.
+      parameters: 
+        - name: rewardProgram
+          in: path
+          description: The name of the rewards program.
+            Values can be as follows - 
+              thankyou - for Thank You Rewards.
+          type: string
+          required: true
+        - name: identifier
+          in: path
+          description: Credit Card Number of the card or Customer number associated with the reward program. TODO - Hashed or Clear Text
+          type: string
+          required: true
+        - name: rewardsSummary
+          in: path
+          description: This field talks about the expected reawrds summary details level and this contains value of "CUSTOMER" or "ACCOUNT"
+          type: string
+          required: true          
+        - name: Accept-Language
+          in: header
+          description: List of acceptable human languages for response
+          required: true
+          type: string
+        - name: channelId
+          in: header
+          description: channel id used by the user
+          required: true
+          type: string
+        - name: businessCode
+          in: header
+          description: 3 character business code, for Mexico business it is MXT
+          required: true
+          type: string
+        - name: countryCode
+          in: header
+          description: Country code in 2 character ISO 3166 format
+          required: true
+          type: string
+        - name: scope
+          in: header
+          description: scope, either visitor or customer
+          required: false
+          type: string
+      responses:
+        '200' : 
+          description: Successful response
+          schema:
+            $ref: '#/definitions/RewardAccount'
+        '400' : 
+          description: (BAD REQUEST) - Request was not processed.
+          schema:
+            $ref: '#/definitions/Error'
+        '403' :
+          description: (FORBIDDEN) - API Server Error
+          schema:
+            $ref: '#/definitions/Error'
