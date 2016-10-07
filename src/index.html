@@ -44,7 +44,7 @@
                             <h4 class="panel-title">{{data.category}}</h4>
                         </div>
                         <div id="{{$index}}" class="panel-collapse collapse">
-                            <div class="panel-body" ng-repeat="entry in data.entities"><a href="#" ng-click="loadSwagger(entry.id,entry.type)">{{entry.name}}</a></div>
+                            <div class="panel-body" ng-repeat="entry in data.entities"><a href="#" ng-click="loadSwagger(entry.id,entry.type,entry.path)">{{entry.name}}</a></div>
                         </div>
                     </div>
                 </div>
