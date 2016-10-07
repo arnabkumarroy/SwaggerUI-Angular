@@ -10,13 +10,13 @@ app.controller('MyCtrl', function($scope,$http, swaggerTranslator,myservice) {
         console.log($scope.dataToList);
 
     });
-    $scope.loadSwagger=function (swaggerFileName,swaggerFileType) {
+    $scope.loadSwagger=function (swaggerFileName,swaggerFileType,filePath) {
         $scope.swaggerFileName=swaggerFileName;
         //console.log("Click Event done");
         $scope.fileType=swaggerFileType;
         console.log("swaggerFileType:"+swaggerFileType);
         myservice.setJsonValue=$scope.swaggerFileName;
-        $scope.url = $scope.swaggerUrl = myservice.setJsonValue+"."+swaggerFileType;//'/angular-swagger-ui/src/Swagger_mx_login.json';
+        $scope.url = $scope.swaggerUrl = filePath+myservice.setJsonValue+"."+swaggerFileType;//'/angular-swagger-ui/src/Swagger_mx_login.json';
 
         console.log("TableCtrlTableCtrl:"+$scope.myservice);
     };
